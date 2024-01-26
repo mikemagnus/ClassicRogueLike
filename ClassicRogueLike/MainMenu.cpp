@@ -11,6 +11,7 @@ bool load();
 
 bool initialized;
 bool quit;
+bool loaded;
 
 int main(int argc, char** args)
 {
