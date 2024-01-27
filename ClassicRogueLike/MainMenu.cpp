@@ -1,6 +1,8 @@
 #include <iostream>
 #include <SDL.h>
 #include <SDL_keycode.h>
+#include <SDL_ttf.h>
+
 
 //References to the SDL2 Objects for the window and Renderer
 SDL_Window* mainWindow;
@@ -25,6 +27,7 @@ int main(int argc, char** args)
 	if (!init())
 	{
 		std::cout << "Error Initializing" << SDL_GetError() << std::endl;
+		return 1;
 	}
 
 	initialized = true;
@@ -32,6 +35,7 @@ int main(int argc, char** args)
 	if (!load())
 	{
 		std::cout << "Error Loading Assets" << SDL_GetError() << std::endl;
+		return 1;
 	}
 
 	loaded = true;
@@ -51,18 +55,20 @@ bool init()
 	}
 
 	// Create our window
-	mainWindow = SDL_CreateWindow("ClassicRogueLike", 0, 0, 1920, 1080, SDL_WINDOW_SHOWN);
+	mainWindow = SDL_CreateWindow("ClassicRogueLike", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1920, 1080, SDL_WINDOW_SHOWN);
 
 	// Make sure creating the window succeeded
 	if (!mainWindow) 
 	{
-		std::cout << "Error creating window: " << SDL_GetError() << std::endl;
-		system("pause");
-		// End the program
 		return false;
 	}
 
-	mainRenderer = SDL_CreateRenderer(mainWindow, -1, SDL_RENDERER_ACCELERATED);
+	mainRenderer = SDL_CreateRenderer(mainWindow, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+
+	if (!mainRenderer)
+	{
+		return false;
+	}
 
 	//White Window
 	SDL_SetRenderDrawColor(mainRenderer, 255, 255, 255, 255);
@@ -73,5 +79,11 @@ bool init()
 	//Flip the buffers
 	SDL_RenderPresent(mainRenderer);
 
+	return true;
+}
+
+bool load()
+{
+	//todo: actually load stuff
 	return true;
 }
