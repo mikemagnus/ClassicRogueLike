@@ -9,11 +9,9 @@ SDL_Window* mainWindow;
 SDL_Renderer* mainRenderer;
 
 bool init();
-bool load();
 
 bool initialized;
 bool quit;
-bool loaded;
 
 int main(int argc, char** args)
 {
@@ -32,13 +30,6 @@ int main(int argc, char** args)
 
 	initialized = true;
 
-	if (!load())
-	{
-		std::cout << "Error Loading Assets" << SDL_GetError() << std::endl;
-		return 1;
-	}
-
-	loaded = true;
 
 	while (!quit)
 	{
@@ -55,7 +46,7 @@ bool init()
 	}
 
 	// Create our window
-	mainWindow = SDL_CreateWindow("ClassicRogueLike", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1920, 1080, SDL_WINDOW_SHOWN);
+	mainWindow = SDL_CreateWindow("ClassicRogueLike", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1920, 1080, SDL_WINDOW_SHOWN | SDL_WINDOW_BORDERLESS);
 
 	// Make sure creating the window succeeded
 	if (!mainWindow) 
@@ -79,11 +70,5 @@ bool init()
 	//Flip the buffers
 	SDL_RenderPresent(mainRenderer);
 
-	return true;
-}
-
-bool load()
-{
-	//todo: actually load stuff
 	return true;
 }

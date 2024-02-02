@@ -31,7 +31,6 @@
     <ClInclude Include="Input.hpp" />
     <ClInclude Include="Node.hpp" />
     <ClInclude Include="NonPlayerCharacter.hpp" />
-    <ClInclude Include="Tile.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
