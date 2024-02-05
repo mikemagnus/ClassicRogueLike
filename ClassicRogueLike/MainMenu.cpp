@@ -1,21 +1,57 @@
+//Standard Libraries
 #include <iostream>
+
+//SDL Libraries
 #include <SDL.h>
 #include <SDL_keycode.h>
-#include <SDL_ttf.h>
+#include <SDL_image.h>	//For Loading PNG's for game assets
+#include <SDL_ttf.h>	//True Type for text rendering
 
+//Internal Headers
+#include "Game.hpp"
+
+//Enum for menu state
+enum MenuState
+{
+	uninitialized = 0,
+	splash = 1,
+	menu = 2,
+	newGame = 3,
+	loadGame = 4,
+	options = 5,
+	quit = 6
+};
 
 //References to the SDL2 Objects for the window and Renderer
 SDL_Window* mainWindow;
 SDL_Renderer* mainRenderer;
+SDL_Texture* mainTexture;
 
+//Game Object
+Game* game;
+//Menu State enum
+MenuState ms;
+//application is quitting if true
+bool quit;
+
+//Initialize SDL
 bool init();
 
-bool initialized;
-bool quit;
+SDL_Texture* loadTexture(std::string path);
+
+//Close SDL
+bool close();
+
+Game* newGame();
+Game* loadGame(std::string fileName);
+
+
+
 
 int main(int argc, char** args)
 {
 	quit = false;
+	ms = uninitialized;
 
 	if (argc > 1)
 	{
@@ -28,13 +64,22 @@ int main(int argc, char** args)
 		return 1;
 	}
 
-	initialized = true;
+	//Draw Splash Screens
+	ms = splash;
 
+	//Black Screen
+	SDL_SetRenderDrawColor(mainRenderer, 0, 0, 0, 255);
+	SDL_RenderClear(mainRenderer);
+	SDL_RenderPresent(mainRenderer);
 
+	//Main Menu Loop
 	while (!quit)
 	{
-		SDL_GetTicks();
+		//Draw main menu
+		//Handle input
 	}
+
+	//Clean Everything Up
 }
 
 bool init()
@@ -61,14 +106,12 @@ bool init()
 		return false;
 	}
 
-	//White Window
-	SDL_SetRenderDrawColor(mainRenderer, 255, 255, 255, 255);
-
-	//Set the whole window to white
-	SDL_RenderClear(mainRenderer);
-
-	//Flip the buffers
-	SDL_RenderPresent(mainRenderer);
+	int imgFlags = IMG_INIT_PNG;
 
 	return true;
+}
+
+SDL_Texture* loadTexture(std::string path)
+{
+
 }

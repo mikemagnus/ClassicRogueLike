@@ -18,17 +18,21 @@ private:
 
 	// All in Milliseconds 
 	// todo: patch if someone runs the game for more than 24 days straight
-	Uint32 currentFrame;	//This frame started in ms
-	Uint32 primaryDelta;	//Delta Time since last update
+	Uint32 currentUpdate;	//This frame started in ms
+	Uint32 updateDelta;	//Delta Time since last update
+
+	Uint32 currentDraw;
+	Uint32 drawDelta;
 
 	//Game State Variables
-	bool quit = false;
+	bool quit;
 
 public:
 	//initialize a new game object
 	Game(SDL_Renderer* r);
 	void update(Uint32 gameTicks);
-
+	void draw(Uint32 gameTicks);
+	bool isQuit();
 };
 
 #endif
