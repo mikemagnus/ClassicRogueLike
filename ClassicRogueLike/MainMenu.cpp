@@ -1,49 +1,9 @@
-//Standard Libraries
-#include <iostream>
+#include "MainMenu.hpp"
 
-//SDL Libraries
-#include <SDL.h>
-#include <SDL_keycode.h>
-#include <SDL_image.h>	//For Loading PNG's for game assets
-#include <SDL_ttf.h>	//True Type for text rendering
 
-//Internal Headers
-#include "Game.hpp"
 
-//Enum for menu state
-enum MenuState
-{
-	uninitialized = 0,
-	splash = 1,
-	menu = 2,
-	newGame = 3,
-	loadGame = 4,
-	options = 5,
-	quit = 6
-};
-
-//References to the SDL2 Objects for the window and Renderer
-SDL_Window* mainWindow;
-SDL_Renderer* mainRenderer;
-SDL_Texture* mainTexture;
-
-//Game Object
-Game* game;
-//Menu State enum
-MenuState ms;
-//application is quitting if true
-bool quit;
-
-//Initialize SDL
-bool init();
-
-SDL_Texture* loadTexture(std::string path);
-
-//Close SDL
-bool close();
-
-Game* newGame();
-Game* loadGame(std::string fileName);
+//Game* newGame();
+//Game* loadGame(std::string fileName);
 
 
 
@@ -64,22 +24,118 @@ int main(int argc, char** args)
 		return 1;
 	}
 
+	mainTexture = loadTexture("Splash-0001.png");
+
+	if (mainTexture == NULL)
+	{
+		std::cout << "Image Load Failed for Splash Screen" << std::endl;
+	}
+
+	mainFont = TTF_OpenFont("joystix monospace.otf", 32);
+
+	if (mainFont == NULL)
+	{
+		std::cout << "TTF Font load failed" << std::endl;
+	}
+
 	//Draw Splash Screens
 	ms = splash;
 
-	//Black Screen
-	SDL_SetRenderDrawColor(mainRenderer, 0, 0, 0, 255);
-	SDL_RenderClear(mainRenderer);
-	SDL_RenderPresent(mainRenderer);
+	SDL_Event e;
 
-	//Main Menu Loop
+	Uint32 gameTicks = SDL_GetTicks();
+	Uint32 gameDelta;
+
+	Uint32 splashTime = 5000 + SDL_GetTicks(); //5 seconds
+
+
+	//Need to actually detect screen size and calc based on that
+	SDL_Rect* splashRect = new SDL_Rect();
+
+	splashRect->x = 640;
+	splashRect->y = 360;
+	splashRect->w = 640;
+	splashRect->h = 360;
+
+	Uint8 currentAlpha = 0;
+
+	SDL_SetTextureBlendMode(mainTexture, SDL_BLENDMODE_ADD);
+
+	//Main Loop
 	while (!quit)
 	{
-		//Draw main menu
-		//Handle input
+		//Calculate Delta
+		gameDelta = SDL_GetTicks() - gameTicks;
+
+		switch (ms)
+		{
+		case splash:
+			if (splashTime > SDL_GetTicks())
+			{
+				if (currentAlpha < 254)
+				{
+					SDL_SetTextureAlphaMod(mainTexture, currentAlpha);
+					currentAlpha += 1;
+				}
+			}
+			else
+			{
+				if (currentAlpha > 0)
+				{
+					SDL_SetTextureAlphaMod(mainTexture, currentAlpha);
+					currentAlpha -= 1;
+				}
+				else
+				{
+					ms = menu;
+					mainTexture = loadTexture("MainMenu-0001.png"); //doesn't exist yet, will error out
+					break;
+				}
+			}
+			//Black Screen
+			SDL_SetRenderDrawColor(mainRenderer, 0, 0, 0, 255);
+			SDL_RenderClear(mainRenderer);
+			SDL_RenderCopy(mainRenderer, mainTexture, NULL, splashRect);
+			break;
+		case menu:
+			//Black Screen
+			SDL_SetRenderDrawColor(mainRenderer, 0, 0, 0, 255);
+			SDL_RenderClear(mainRenderer);
+			break;
+		}
+	
+			
+
+		while (SDL_PollEvent(&e) != 0)
+		{
+			switch (e.type)
+			{
+			case SDL_QUIT:
+				quit = true;
+				break;
+			case SDL_KEYDOWN:
+				switch (e.key.keysym.sym)
+				{
+				case SDLK_SPACE:
+					std::cout << "Space my Bar" << std::endl;
+					break;
+				default:
+					std::cout << "you pressed the any key" << std::endl;
+					break;
+				}
+			}
+		}
+		SDL_RenderPresent(mainRenderer);
 	}
 
 	//Clean Everything Up
+	if (!close())
+	{
+		std::cout << "Error shutting down: " << SDL_GetError << std::endl;
+		return 1;
+	}
+	
+	return 0;
 }
 
 bool init()
@@ -108,10 +164,57 @@ bool init()
 
 	int imgFlags = IMG_INIT_PNG;
 
+	if (!(IMG_Init(imgFlags) & imgFlags))
+	{
+		std::cout << "SDL_image could not initialize! Error: " << IMG_GetError() << std::endl;
+		return false;
+	}
+
+	if (TTF_Init() == -1)
+	{
+		std::cout << "SDL_ttf could not initialize! Error: " << TTF_GetError() << std::endl;
+		return false;
+	}
+
+	return true;
+}
+
+bool close()
+{
+	SDL_DestroyTexture(mainTexture);
+	mainTexture = NULL;
+
+	SDL_DestroyRenderer(mainRenderer);
+	SDL_DestroyWindow(mainWindow);
+	mainWindow = NULL;
+	mainRenderer = NULL;
+
+	TTF_Quit();
+	IMG_Quit();
+	SDL_Quit();
 	return true;
 }
 
 SDL_Texture* loadTexture(std::string path)
 {
+	SDL_Texture* newTexture = NULL;
 
+	SDL_Surface* loadedSurface = IMG_Load(path.c_str());
+
+	if (loadedSurface == NULL)
+	{
+		std::cout << "Unable to load image at path: " << path << "Error: " << IMG_GetError() << std::endl;
+	}
+	else
+	{
+		newTexture = SDL_CreateTextureFromSurface(mainRenderer, loadedSurface);
+		if (newTexture == NULL)
+		{
+			std::cout << "Could not create texture from surface. SDL_image Error: " << IMG_GetError();
+		}
+
+		//Free Surface... I'll take it!
+		SDL_FreeSurface(loadedSurface);
+	}
+	return newTexture;
 }

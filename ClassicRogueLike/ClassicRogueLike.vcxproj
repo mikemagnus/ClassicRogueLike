@@ -22,6 +22,8 @@
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="MainMenu.cpp" />
+    <ClCompile Include="MTexture.cpp" />
+    <ClCompile Include="SplashScreen.cpp" />
     <ClCompile Include="Tileset.hpp" />
   </ItemGroup>
   <ItemGroup>
@@ -29,11 +31,16 @@
     <ClInclude Include="Drawable.hpp" />
     <ClInclude Include="Game.hpp" />
     <ClInclude Include="Input.hpp" />
+    <ClInclude Include="MainMenu.hpp" />
+    <ClInclude Include="MTexture.hpp" />
     <ClInclude Include="Node.hpp" />
     <ClInclude Include="NonPlayerCharacter.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\..\..\..\Documents\Pixel Art\2 Bit\Splash-0001.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="joystix monospace.otf" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

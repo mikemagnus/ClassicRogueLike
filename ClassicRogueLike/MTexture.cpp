@@ -1,0 +1,3 @@
+#include "MTexture.hpp"
+
+MTexture::
