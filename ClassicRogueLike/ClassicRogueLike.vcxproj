@@ -19,10 +19,12 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Drawable.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="MainMenu.cpp" />
     <ClCompile Include="MTexture.cpp" />
+    <ClCompile Include="Node.cpp" />
     <ClCompile Include="SplashScreen.cpp" />
     <ClCompile Include="Tileset.hpp" />
   </ItemGroup>

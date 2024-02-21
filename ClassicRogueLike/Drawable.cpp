@@ -1,20 +1,6 @@
-#include "MTexture.hpp"
+#include "Drawable.hpp"
 
-MTexture::MTexture(SDL_Renderer* ren, std::string path)
-{
-	r = ren;
-	t = loadTexture(path);
-}
-
-MTexture::MTexture(SDL_Renderer* ren, SDL_Texture* texture)
-{
-	r = ren;
-	t = texture;
-}
-
-
-
-SDL_Texture* MTexture::loadTexture(std::string path)
+SDL_Texture* Drawable::loadTexture(std::string path)
 {
 	SDL_Texture* newTexture = NULL;
 
